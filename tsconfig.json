@@ -114,7 +114,7 @@
 
 {
   "compilerOptions": {
-    "rootDir": "./", // Set to root directory
+    "rootDir": "./src", // Set to the source directory
     "outDir": "./dist", // Specify output directory
     "strict": true,
     "esModuleInterop": true,
@@ -123,13 +123,13 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "lib": ["ES2020", "DOM"],
-    "types": ["node", "react", "react-dom"], // Specify types
-    "noEmit": true // Set to allow 'allowImportingTsExtensions'
+    "types": ["node", "react", "react-dom"] // Specify types
+    // Remove "noEmit" if you want to emit compiled files
   },
   "include": [
     "src/**/*",
-    "src/types/**/*" // Ensure this line is present
-    // "vite.config.ts" // Include vite.config.ts
+    "src/types/**/*", // Ensure this line is present
+    "vite.config.ts" // Add this line to include vite.config.ts
   ],
   "exclude": ["node_modules", "dist"]
 }
