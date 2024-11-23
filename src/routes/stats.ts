@@ -4,13 +4,38 @@ import { getBarCharts, getDashboardStats, getLineCharts, getPieCharts } from '..
 
 const app = express.Router();
 
-app.get("/stats", adminonly , getDashboardStats);
+app.get("/stats", adminonly, async (req, res, next) => {
+    try {
+        const result = await getDashboardStats(req, res, next);
+        res.json(result);
+    } catch (error) {
+        next(error);
+    }
+});
 
-app.get("/pie",adminonly, getPieCharts);
+app.get("/pie", adminonly, async (req, res, next) => {
+    try {
+        await getPieCharts(req, res, next);
+    } catch (error) {
+        next(error);
+    }
+});
 
-app.get("/bar",adminonly, getBarCharts);
+app.get("/bar", adminonly, async (req, res, next) => {
+    try {
+        await getBarCharts(req, res, next);
+    } catch (error) {
+        next(error);
+    }
+});
 
-app.get("/line", adminonly, getLineCharts);
+app.get("/line", adminonly, async (req, res, next) => {
+    try {
+        await getLineCharts(req, res, next);
+    } catch (error) {
+        next(error);
+    }
+});
 
 
 export default app;

@@ -3,83 +3,72 @@ import { User } from "../models/user.js";
 import { NewUserRequestBody } from "../types/types.js";
 import ErrorHandler from "../utils/utility-class.js";
 import { TryCatch } from "../middlewares/error.js";
-import { error } from "console";
 
-export const newUser  = TryCatch(
-    async(
-        req: Request<{}, {}, NewUserRequestBody> , 
-        res: Response ,
-        next: NextFunction
-        ) => {
-            
-            
+const asyncHandler = (fn: (req: Request, res: Response, next: NextFunction) => Promise<void>) => {
+    return (req: Request, res: Response, next: NextFunction): void => {
+        fn(req, res, next).catch(next);
+    };
+};
 
-            const{name , email, photo , gender  , _id , dob} = req.body;
+export const newUser = asyncHandler(async (req: Request<{}, {}, NewUserRequestBody>, res, next): Promise<void> => {
+    const { name, email, photo, gender, _id, dob } = req.body;
 
-            let user = await User.findById(_id);
-
-            if(user)
-                return res.status(200).json({
-                    success: true,
-                    message: `Welcome back, ${user.name}`,
-                });
-                if(!_id || !name  || !email || !photo || !gender || !dob)
-                    return next(new ErrorHandler("Please enter all field",400));
-                
-                
-            
-            user = await User.create({
-                name ,
-                email, 
-                photo , 
-                gender , 
-                
-                _id ,
-                dob: new Date(dob),
-            });
-    
-            return res.status(201).json({
-                success: true,
-                message: `Welcome, ${user.name}`,
-            });
+    let user = await User.findById(_id);
+    if (user) {
+        res.status(200).json({
+            success: true,
+            message: `Welcome back, ${user.name}`,
+        });
     }
-);
 
+    if (!_id || !name || !email || !photo || !gender || !dob) {
+        return next(new ErrorHandler("Please enter all fields", 400));
+    }
 
-export const getAllUsers = TryCatch( async(req , res, next) => {
+    user = await User.create({
+        name,
+        email,
+        photo,
+        gender,
+        _id,
+        dob: new Date(dob),
+    });
+
+    res.status(201).json({
+        success: true,
+        message: `Welcome, ${user.name}`,
+    });
+});
+
+export const getAllUsers = asyncHandler(async (req, res, next): Promise<void> => {
     const users = await User.find();
-
-    return res.status(201).json({
-        success : true,
+    res.status(200).json({
+        success: true,
         users,
     });
 });
 
-export const getUser = TryCatch( async(req , res, next) => {
+export const getUser = asyncHandler(async (req, res, next): Promise<void> => {
     const user = await User.findById(req.params.id);
+    if (!user) {
+        return next(new ErrorHandler("Invalid ID", 402));
+    }
 
-    if(!user)
-        return next(new ErrorHandler("Invallid ID",402));
-
-    return res.status(201).json({
+    res.status(200).json({
         success: true,
         user,
     });
-
 });
 
-
-export const deleteUser = TryCatch( async(req , res, next) => {
+export const deleteUser = asyncHandler(async (req, res, next): Promise<void> => {
     const user = await User.findById(req.params.id);
-
-    if(!user)
-        return next(new ErrorHandler("Invallid ID",402));
-
+    if (!user) {
+        return next(new ErrorHandler("Invalid ID", 402));
+    }
 
     await user.deleteOne();
-    return res.status(201).json({
+    res.status(200).json({
         success: true,
         message: "User deleted",
     });
-
 });

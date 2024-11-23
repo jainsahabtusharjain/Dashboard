@@ -123,7 +123,8 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "lib": ["ES2020", "DOM"],
-    "types": ["node", "react", "react-dom"] // Specify types
+    "types": ["node", "react", "react-dom"], // Specify types
+    "noEmit": true // Set to allow 'allowImportingTsExtensions'
   },
   "include": [
     "src/**/*",

@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction } from 'express';
 import { deleteUser, getAllUsers, getUser, newUser } from '../controllers/user.js';
 import { adminonly } from '../middlewares/auth.js';
 
@@ -38,4 +38,21 @@ app.route("/:id")
         }
     });
 
+app.get("/line", adminonly, async (req: express.Request, res: express.Response, next: NextFunction) => {
+    try {
+        // Your logic here (e.g., fetching data)
+        const data = await someAsyncFunction(); // Replace with your actual logic
+
+        // Send the response back to the client
+        res.json(data); // This sends the data as a JSON response
+    } catch (error) {
+        // If an error occurs, pass it to the next middleware
+        next(error);
+    }
+});
+
 export default app;
+
+function someAsyncFunction() {
+    throw new Error('Function not implemented.');
+}

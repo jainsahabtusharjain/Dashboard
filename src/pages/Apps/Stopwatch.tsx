@@ -33,7 +33,7 @@ const Stopwatch = () => {
       intervalID = setInterval(() => {
         // Increment time every second
         setTime((prev) => prev + 1);
-      }, 1000);
+      }, 1000) as unknown as number;
     }
 
     // Cleanup function
